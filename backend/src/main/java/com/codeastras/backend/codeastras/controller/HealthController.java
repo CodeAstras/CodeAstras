@@ -1,4 +1,4 @@
-package com.codeastra.backend.controller;
+package com.codeastras.backend.codeastras.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
