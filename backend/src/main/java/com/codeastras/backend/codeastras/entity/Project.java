@@ -24,6 +24,9 @@ public class Project {
     @Column(nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "owner_id", nullable = true)
+    private UUID ownerId;
+
     public Project() {}
 
     public Project(UUID id, String name, String language) {
@@ -72,5 +75,13 @@ public class Project {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public UUID getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(UUID ownerId) {
+        this.ownerId = ownerId;
     }
 }

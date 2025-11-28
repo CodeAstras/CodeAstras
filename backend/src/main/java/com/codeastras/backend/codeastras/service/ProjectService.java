@@ -20,15 +20,16 @@ public class ProjectService {
         this.fileRepo = fileRepo;
     }
 
-    public Project createProject(CreateProjectRequest req) {
+    public Project createProject(CreateProjectRequest req, UUID ownerId) {
 
-        // Create project entry
+        // Create project
         Project project = new Project(
                 UUID.randomUUID(),
                 req.getName(),
                 req.getLanguage()
         );
 
+        project.setOwnerId(ownerId);
         projectRepo.save(project);
 
         // Python default files
