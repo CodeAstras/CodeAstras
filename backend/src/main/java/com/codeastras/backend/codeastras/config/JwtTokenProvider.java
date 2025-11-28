@@ -39,7 +39,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token.toString())
+                .parseClaimsJws(token)
                 .getBody();
         String sub = claims.getSubject();
         return UUID.fromString(sub);

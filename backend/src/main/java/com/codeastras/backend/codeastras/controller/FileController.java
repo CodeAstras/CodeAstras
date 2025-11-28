@@ -4,13 +4,14 @@ import com.codeastras.backend.codeastras.entity.ProjectFile;
 import com.codeastras.backend.codeastras.service.FileService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/projects")
+@RequestMapping("/api/projects")
 @CrossOrigin(origins = "*")
 public class FileController {
 
@@ -20,26 +21,32 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping
-    public List<ProjectFile> getProjectFiles(@PathVariable UUID projectId) {
-        return fileService.findAllByProjectId(projectId);
+    @GetMapping("/{projectId}/files")
+    public List<ProjectFile> getProjectFiles(@PathVariable UUID projectId, Authentication authentication) {
+        UUID userId = (UUID) authentication.getPrincipal();
+        return fileService.findAllByProjectId(projectId, userId);
     }
 
     @GetMapping(path ="/{projectId}/file", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProjectFile> getFile (
-        @PathVariable UUID projectId,
-        @RequestParam String path
+            @PathVariable UUID projectId,
+            @RequestParam String path,
+            Authentication authentication
     ) {
-        ProjectFile file = fileService.getFile(projectId, path);
+        UUID userId = (UUID) authentication.getPrincipal();
+        ProjectFile file = fileService.getFile(projectId, path, userId);
         return ResponseEntity.ok(file);
     }
 
+    @PutMapping("/{projectId}/file")
     public ResponseEntity<ProjectFile> saveFile(
             @PathVariable UUID projectId,
             @RequestParam String path,
-            @RequestBody String content
+            @RequestBody String content,
+            Authentication authentication
     ) {
-        ProjectFile updated = fileService.savedFileContent(projectId, path, content);
+        UUID userId = (UUID) authentication.getPrincipal();
+        ProjectFile updated = fileService.saveFileContent(projectId, path, content, userId);
         return ResponseEntity.ok(updated);
     }
 }

@@ -1,5 +1,7 @@
 package com.codeastras.backend.codeastras.service;
 
+import com.codeastras.backend.codeastras.exception.ForbiddenException;
+import com.codeastras.backend.codeastras.exception.ResourceNotFoundException;
 import com.codeastras.backend.codeastras.dto.CreateProjectRequest;
 import com.codeastras.backend.codeastras.entity.Project;
 import com.codeastras.backend.codeastras.entity.ProjectFile;
@@ -19,6 +21,16 @@ public class ProjectService {
         this.projectRepo = projectRepo;
         this.fileRepo = fileRepo;
     }
+
+    public Project getProjectForUser(UUID projectId, UUID userId) {
+        Project project = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+        if (!project.getOwnerId().equals(userId)) {
+            throw new ForbiddenException("Not allowed");
+        }
+        return project;
+    }
+
 
     public Project createProject(CreateProjectRequest req, UUID ownerId) {
 
