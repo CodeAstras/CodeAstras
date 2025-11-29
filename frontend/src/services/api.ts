@@ -1,12 +1,16 @@
-export async function createProject() {
-    const response = await fetch("http://localhost:8080/api/project/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }
-    });
+import axios from "axios";
 
-    if (!response.ok) {
-        throw new Error("Failed to create project");
+const api = axios.create({
+    baseURL: "http://localhost:8080",
+});
+
+// Inject token automatically
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+});
 
-    return response.json();
-}
+export default api;

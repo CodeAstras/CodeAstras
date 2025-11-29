@@ -1,10 +1,6 @@
 package com.codeastras.backend.codeastras.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -16,6 +12,12 @@ public class User {
     @Column(nullable = false)
     private UUID id;
 
+    @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -25,15 +27,20 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    // Required by JPA
     public User() {}
 
-    public User(UUID id, String email, String passwordHash) {
+    // Full constructor for creating new users
+    public User(UUID id, String fullName, String username, String email, String passwordHash) {
         this.id = id;
+        this.fullName = fullName;
+        this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
         this.createdAt = Instant.now();
     }
 
+    // --------- GETTERS & SETTERS ----------
 
     public UUID getId() {
         return id;
@@ -41,6 +48,22 @@ public class User {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

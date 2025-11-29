@@ -28,8 +28,18 @@ public class AuthService {
         if (userRepo.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("email already in use");
         }
+        if (userRepo.existsByUsername(req.getUsername())) {
+            throw new IllegalArgumentException("Username already in use");
+        }
         String hashed = passwordEncoder.encode(req.getPassword());
-        User user = new User(UUID.randomUUID(), req.getEmail(), hashed);
+        User user = new User(
+                UUID.randomUUID(),
+                req.getFullName(),
+                req.getUsername(),
+                req.getEmail(),
+                hashed
+        );
+
         userRepo.save(user);
         return jwtTokenProvider.generateToken(user.getId());
     }
